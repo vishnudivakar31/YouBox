@@ -22,6 +22,7 @@ class SignUp extends Component {
                 cond3: false,
                 cond4: false,
                 cond5: false,
+                cond6: false
             }
         }
     }
@@ -31,14 +32,16 @@ class SignUp extends Component {
             this.state.form_validity.cond2 ? <CheckIcon /> : <CancelIcon />,
             this.state.form_validity.cond3 ? <CheckIcon /> : <CancelIcon />,
             this.state.form_validity.cond4 ? <CheckIcon /> : <CancelIcon />,
-            this.state.form_validity.cond5 ? <CheckIcon /> : <CancelIcon />
+            this.state.form_validity.cond5 ? <CheckIcon /> : <CancelIcon />,
+            this.state.form_validity.cond6 ? <CheckIcon /> : <CancelIcon />
         ]
         let colors = [
             this.state.form_validity.cond1 ? 'green' : 'red',
             this.state.form_validity.cond2 ? 'green' : 'red',
             this.state.form_validity.cond3 ? 'green' : 'red',
             this.state.form_validity.cond4 ? 'green' : 'red',
-            this.state.form_validity.cond5 ? 'green' : 'red'
+            this.state.form_validity.cond5 ? 'green' : 'red',
+            this.state.form_validity.cond6 ? 'green' : 'red'
         ]
         return(
             <Container fixed className='signup'>
@@ -88,6 +91,13 @@ class SignUp extends Component {
                                         {icons[4]}
                                     </ListItemIcon>
                                     <ListItemText primary="Should contain atleast one uppercase letter" />
+                                </ListItem>
+
+                                <ListItem style={{ color: colors[5]}}>
+                                    <ListItemIcon style={{ color: colors[5]}}>
+                                        {icons[5]}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Should contain atleast one lowercase letter" />
                                 </ListItem>
                             </List>
                         </Container>

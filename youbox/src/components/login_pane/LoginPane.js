@@ -16,9 +16,9 @@ class LoginPane extends Component {
                         YouBox
                     </Box>
                     <Grid alignContent='center' alignItems='center' className='login_button_group'>
-                        <TextField id="username_text" label="username" variant="outlined" type='username' size='small' />
+                        <TextField id="username_text" label="email" variant="outlined" type='email' size='small' />
                         <TextField id="password_text" label="password" variant="outlined" type='password' size='small' />
-                        <Button variant='contained' color='primary' size='medium'>Login</Button>
+                        <Button variant='contained' color='primary' size='medium' disabled>Login</Button>
                         <Link component='button'>Forgot password?</Link>
                     </Grid>
                 </Grid>
