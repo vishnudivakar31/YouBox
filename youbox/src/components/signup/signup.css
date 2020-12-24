@@ -1,0 +1,35 @@
+.signup {
+    margin: 2%;
+}
+
+.signup .join_text {
+    font-size: 45px;
+    font-family: Bungee;
+    color: #d63031;
+}
+
+.signup .create_account {
+    font-size: 25px;
+}
+
+.signup .subtitle {
+    font-size: 10px;
+    font-family: Bungee;
+    color: #d63031;
+    font-style: italic;
+}
+
+.signup .form {
+    margin: 5%;
+    padding: 5%;
+    box-shadow: 3px 3px 16px 8px #dfe6e9;
+    border-radius: 1vw;
+}
+
+.signup .form .form_input {
+    margin-top: 2%;
+}
+
+.signup .form .instructions {
+    border-right: 1px solid #b2bec3;
+}
