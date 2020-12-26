@@ -9,6 +9,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import CancelIcon from '@material-ui/icons/Cancel'
 import CheckIcon from '@material-ui/icons/Check'
+import Typography from '@material-ui/core/Typography'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { connect } from 'react-redux'
 import { registerUser } from '../../redux/user_reducer/action'
 
@@ -44,7 +46,8 @@ class SignUp extends Component {
                     error: false,
                     msg: ""
                 }
-            }
+            },
+            loading: false
         }
         this.nameRef = createRef()
         this.emailRef = createRef()
@@ -55,7 +58,16 @@ class SignUp extends Component {
         this.submit = this.submit.bind(this)
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps.register_status !== this.props.register_status) {
+            this.setState({
+                loading: false
+            })
+        }
+    }
+
     submit() {
+        let loading = false
         let field1 = {
             error: false,
             msg: ""
@@ -112,6 +124,7 @@ class SignUp extends Component {
                 email: this.emailRef.current.value,
                 password: this.passwordRef.current.value,
             })
+            loading = true
         }
         this.setState({
             form_error:{
@@ -119,7 +132,8 @@ class SignUp extends Component {
                 field2,
                 field3,
                 field4
-            }
+            },
+            loading
         })
     }
 
@@ -324,7 +338,7 @@ class SignUp extends Component {
                                     helperText={this.state.form_error.field4.msg}
                                 />
                             </Box>
-                            <Box>
+                            <Box display='flex' alignItems='center'>
                                 <Button 
                                     variant='contained' 
                                     color='primary' 
@@ -333,6 +347,19 @@ class SignUp extends Component {
                                 >
                                     Submit
                                 </Button>
+                                <Box marginTop='2%' marginLeft='2%' hidden={!this.state.loading}>
+                                    <CircularProgress size='2rem' />
+                                </Box>
+                            </Box>
+                            <Box hidden={!this.props.register_status.failure}>
+                                <Typography variant='caption' display='block' color='error' gutterBottom>
+                                    {this.props.register_status.message}
+                                </Typography>
+                            </Box>
+                            <Box hidden={!this.props.register_status.success}>
+                                <Typography variant='caption' display='block' color='primary' gutterBottom>
+                                    {this.props.register_status.message}
+                                </Typography>
                             </Box>
                         </Container>
                     </Box>
@@ -344,7 +371,8 @@ class SignUp extends Component {
 
 function mapStateToProps(state) {
     return {
-        user: state.user
+        user: state.user,
+        register_status: state.user.register_status 
     }
 }
 

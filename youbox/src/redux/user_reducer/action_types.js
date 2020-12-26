@@ -1,2 +1,4 @@
 export const SET_USER = 'SET_USER'
 export const UNSET_USER = 'UNSET_USER'
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
+export const REGISTER_ERROR = 'REGISTER_ERROR'

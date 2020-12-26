@@ -1,4 +1,7 @@
-import {SET_USER, UNSET_USER} from './action_types'
+import {
+    SET_USER, 
+    UNSET_USER
+} from './action_types'
 import {REGISTER_USER} from '../../sagas/user_saga/action_type'
 
 export function setUser(payload) {
