@@ -1,4 +1,3 @@
-import { act } from 'react-dom/test-utils'
 import {SET_USER, UNSET_USER} from './action_types'
 
 const initialState = {

@@ -9,6 +9,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import CancelIcon from '@material-ui/icons/Cancel'
 import CheckIcon from '@material-ui/icons/Check'
+import { connect } from 'react-redux'
+import { registerUser } from '../../redux/user_reducer/action'
 
 import './signup.css'
 
@@ -93,6 +95,23 @@ class SignUp extends Component {
                 error: true,
                 msg: 'required field'
             }
+        }
+        if(!field1.error && 
+            !field2.error && 
+            !field3.error && 
+            !field4.error && 
+            this.state.form_validity.cond1 &&
+            this.state.form_validity.cond2 &&
+            this.state.form_validity.cond3 &&
+            this.state.form_validity.cond4 &&
+            this.state.form_validity.cond5 &&
+            this.state.form_validity.cond6 &&
+            this.state.form_validity.cond7) {
+            this.props.registerUser({
+                name: this.nameRef.current.value,
+                email: this.emailRef.current.value,
+                password: this.passwordRef.current.value,
+            })
         }
         this.setState({
             form_error:{
@@ -323,4 +342,16 @@ class SignUp extends Component {
     }
 }
 
-export default SignUp
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        registerUser: user => dispatch(registerUser(user))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
