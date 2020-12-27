@@ -7,6 +7,7 @@ import Link from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
 import { connect } from 'react-redux'
 import { loginUser, forgotPassword } from '../../redux/user_reducer/action'
+import { withRouter } from 'react-router-dom'
 
 import './login_pane.css'
 
@@ -30,6 +31,12 @@ class LoginPane extends Component {
         this.passwordRef = createRef()
         this.loginHandler = this.loginHandler.bind(this)
         this.forgetPasswordHandler = this.forgetPasswordHandler.bind(this) 
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.login_status.success !== this.props.login_status.success && this.props.login_status.success) {
+            this.props.history.push('/home')
+        }
     }
 
     loginHandler() {
@@ -147,4 +154,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (LoginPane)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps) (LoginPane))

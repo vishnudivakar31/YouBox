@@ -33,7 +33,20 @@ function* loginUser({ payload }) {
             yield put({ type: LOGIN_ERROR, payload: { message: 'verify your email to proceed.' }})
         } else {
             const uid = userData.user.uid
-            //TODO: Fetch user details
+            const snapshot = yield call(reduxSagaFirebase.firestore.getCollection, 'users')
+            let loggedInUser = undefined
+            snapshot.forEach(user => {
+                const userData = user.data()
+                if(userData.uid === uid) {
+                    loggedInUser = userData
+                }
+            })
+            if(loggedInUser) {
+                yield put({ type: SET_USER, payload: { userId: loggedInUser.uid, name: loggedInUser.name }})
+                yield put({ type: LOGIN_SUCCESS, payload: { message: 'logged in' }})
+            } else {
+                yield put({ type: LOGIN_ERROR, payload: { message: 'user account not found.' }})
+            }
         }
     } catch(error) {
         yield put({ type: LOGIN_ERROR, payload: { message: error.message }})
