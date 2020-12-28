@@ -1,0 +1,49 @@
+.home_navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1vw;
+    background: #192a56;
+    color: #f5f6fa;
+}
+
+.home_nav_button_group {
+    display: flex;
+    align-items: center;
+}
+
+.tab_active {
+    border-bottom: 1px solid #f5f6fa;
+    font-size: larger;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vw;
+    color: #f5f6fa;
+    padding: 0.5% 2%;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.tab_inactive {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vw;
+    color: #f5f6fa;
+    padding: 0.5% 2%;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.add_new_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add_new_button:hover {
+    border-bottom: 1px solid #f5f6fa;
+}

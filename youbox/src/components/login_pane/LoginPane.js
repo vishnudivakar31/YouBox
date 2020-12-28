@@ -40,7 +40,7 @@ class LoginPane extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.login_status.success !== this.props.login_status.success && this.props.login_status.success && this.props.user.userId.length > 0) {
+        if(prevProps.login_status !== this.props.login_status && this.props.login_status.success && this.props.user.userId.length > 0) {
             this.props.history.push('/home')
         }
     }
