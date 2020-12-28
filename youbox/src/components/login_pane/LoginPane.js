@@ -33,8 +33,14 @@ class LoginPane extends Component {
         this.forgetPasswordHandler = this.forgetPasswordHandler.bind(this) 
     }
 
+    componentDidMount() {
+        if(this.props.login_status.success && this.props.user.userId.length > 0) {
+            this.props.history.push('/home')
+        }
+    }
+
     componentDidUpdate(prevProps) {
-        if(prevProps.login_status.success !== this.props.login_status.success && this.props.login_status.success) {
+        if(prevProps.login_status.success !== this.props.login_status.success && this.props.login_status.success && this.props.user.userId.length > 0) {
             this.props.history.push('/home')
         }
     }

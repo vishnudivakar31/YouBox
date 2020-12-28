@@ -12,14 +12,14 @@ function App() {
     <Router>
       <Switch>
 
-        <Route path='/home'>
+        <Route exact path='/home'>
           <HomePage />
         </Route>
 
-        <Route path='/'>
+        <Route exact path='/'>
           <SecurityPage />
         </Route>
-        
+
       </Switch>
     </Router>
   );
