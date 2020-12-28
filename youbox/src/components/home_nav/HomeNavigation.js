@@ -8,7 +8,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import './home_navigation.css'
 import { useState } from 'react'
 
-function HomeNavigation({ navigation }) {
+function HomeNavigation({ navigation, createHandler }) {
     const [selectedTab, setTab] = useState(0)
     return (
         <Box className='home_navigation'>
@@ -30,7 +30,7 @@ function HomeNavigation({ navigation }) {
                     <Box marginLeft='0.5vw'>Recent</Box>
                 </Box>
             </Box>
-            <Box className='add_new_button'>
+            <Box className='add_new_button' onClick={() => createHandler(true)}>
                 <AddCircleOutlineIcon />
                 <Box marginLeft='0.5vw'>Add new video</Box>
             </Box>
