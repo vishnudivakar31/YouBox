@@ -3,6 +3,7 @@ import HomeHeader from '../components/home_header/HomeHeader'
 import HomeNavigation from '../components/home_nav/HomeNavigation'
 import SearchIcon from '@material-ui/icons/Search';
 import VideoCapsule from '../components/video_capsule/VideoCapsule'
+import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
@@ -122,6 +123,12 @@ class HomePage extends Component {
                                 title={this.props.search_result.title}
                                 thumbnail_url={this.props.search_result.thumbnail_url}
                                 author_name={this.props.search_result.author_name}
+                            />
+                            <Typography variant='subtitle1' fontWeight='bold' fontSize='large'>
+                                Category
+                            </Typography>
+                            <CategoryExplorer
+                                categories={[]}
                             />
                         </Box>
                     </DialogContent>

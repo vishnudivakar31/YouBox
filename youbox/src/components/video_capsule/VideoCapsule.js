@@ -6,7 +6,7 @@ export default function VideoCapsule({ thumbnail_url, title, author_name }) {
             <CardContent>
                 <img
                     src={thumbnail_url}
-                    alt='image of video'
+                    alt='youtube'
                 />
                 <Typography variant='h6'>
                     {title}
