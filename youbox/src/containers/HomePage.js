@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import HomeHeader from '../components/home_header/HomeHeader'
 import HomeNavigation from '../components/home_nav/HomeNavigation'
 import SearchIcon from '@material-ui/icons/Search';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from '@material-ui/core'
+import VideoCapsule from '../components/video_capsule/VideoCapsule'
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
+import { searchVideo, setSearchError } from '../redux/search_redux/action'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -15,6 +17,7 @@ class HomePage extends Component {
             nav_tab: 0,
             dialogOpen: false
         }
+        this.searchVideoText = createRef()
         this.setNavTab = this.setNavTab.bind(this)
         this.tabRenderer = this.tabRenderer.bind(this)
         this.openDialog = this.openDialog.bind(this)
@@ -34,6 +37,9 @@ class HomePage extends Component {
 
     openDialog(status) {
         this.setState({ dialogOpen: status })
+        if(status === true) {
+            this.props.setSearchError({ error_status: false, error_msg: '' })
+        }
     }
 
     setNavTab(tabIndex) {
@@ -75,13 +81,48 @@ class HomePage extends Component {
                     {this.tabRenderer()}
                 </Box>
                 <Dialog open={this.state.dialogOpen} onClose={() => this.openDialog(false)}>
-                    <DialogTitle>Add video to your collection</DialogTitle>
+                    <DialogTitle>
+                        <Box display='flex' alignItems='center'>
+                            <Box fontWeight='bold' fontSize='x-large'>Add video to your collection</Box>
+                            <Box hidden={!this.props.search_loading} marginLeft='0.5vw'>
+                                <CircularProgress size='1.5rem' />
+                            </Box>
+                        </Box>
+                        
+                    </DialogTitle>
                     <DialogContent>
                         <Box display='flex' alignItems='center'>
-                            <TextField label='youtube-url' variant='outlined' size='small' fullWidth style={{ width: '30vw' }} />
-                            <IconButton style={{ marginLeft: '0.5vw' }} color='primary' aria-label='search video'>
+                            <TextField 
+                                label='youtube-url' 
+                                variant='outlined' 
+                                size='small' 
+                                fullWidth 
+                                style={{ width: '30vw' }} 
+                                inputRef={this.searchVideoText}
+                            />
+                            <IconButton 
+                                style={{ marginLeft: '0.5vw' }} 
+                                color='primary' 
+                                aria-label='search video'
+                                onClick={() => this.props.searchVideo({ url: this.searchVideoText.current ? this.searchVideoText.current.value : undefined })}
+                            >
                                 <SearchIcon />
                             </IconButton>
+                        </Box>
+                        <Box display='flex' alignItems='center' hidden={!this.props.search_error.error}>
+                            <Typography variant='caption' color='error'>
+                                {this.props.search_error.msg}
+                            </Typography>
+                        </Box>
+                        <Box hidden={!this.props.search_status}>
+                            <Typography variant='subtitle1' fontWeight='bold' fontSize='large'>
+                                Search Result
+                            </Typography>
+                            <VideoCapsule
+                                title={this.props.search_result.title}
+                                thumbnail_url={this.props.search_result.thumbnail_url}
+                                author_name={this.props.search_result.author_name}
+                            />
                         </Box>
                     </DialogContent>
                     <DialogActions>
@@ -97,13 +138,19 @@ class HomePage extends Component {
 function mapStateToProps(state) {
     return {
         user: state.user,
-        login_status: state.user.login_status 
+        login_status: state.user.login_status,
+        search_loading: state.search.loading,
+        search_result: state.search.search_result,
+        search_status: state.search.search_status,
+        search_error: state.search.search_error,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        unSetUser: () => dispatch(unSetUser())
+        unSetUser: () => dispatch(unSetUser()),
+        searchVideo: payload => dispatch(searchVideo(payload)),
+        setSearchError: payload => dispatch(setSearchError(payload))
     }
 }
 
