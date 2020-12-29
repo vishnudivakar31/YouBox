@@ -4,7 +4,7 @@ import sessionStorage from 'redux-persist/es/storage/session'
 import userReducer from './user_reducer/UserReducer'
 import searchReducer from './search_redux/SearchReducer'
 import createSagaMiddleware from 'redux-saga'
-import userSaga from '../sagas/user_saga/user_saga'
+import rootSaga from '../sagas/RootSaga'
 
 const sagaMiddleWare = createSagaMiddleware()
 
@@ -21,6 +21,6 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 const store = createStore(persistedReducer, applyMiddleware(sagaMiddleWare))
 const persistor = persistStore(store)
 
-sagaMiddleWare.run(userSaga)
+sagaMiddleWare.run(rootSaga)
 
 export {store, persistor}
