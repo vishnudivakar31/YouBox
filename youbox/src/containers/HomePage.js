@@ -7,6 +7,7 @@ import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
+import { fetchCategories, saveCategories } from '../redux/collection_redux/actions'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -28,6 +29,7 @@ class HomePage extends Component {
         if(this.props.user.userId.length === 0) {
             this.props.history.push('/')
         }
+        this.props.fetchCategories()
     }
 
     componentDidUpdate(prevProps) {
@@ -116,20 +118,22 @@ class HomePage extends Component {
                             </Typography>
                         </Box>
                         <Box hidden={!this.props.search_status}>
-                            <Typography variant='subtitle1' fontWeight='bold' fontSize='large'>
-                                Search Result
-                            </Typography>
-                            <VideoCapsule
-                                title={this.props.search_result.title}
-                                thumbnail_url={this.props.search_result.thumbnail_url}
-                                author_name={this.props.search_result.author_name}
-                            />
-                            <Typography variant='subtitle1' fontWeight='bold' fontSize='large'>
-                                Category
-                            </Typography>
-                            <CategoryExplorer
-                                categories={[]}
-                            />
+                            <Box>
+                                <Typography variant='subtitle1' fontWeight='bold' fontSize='large'>
+                                    Search Result
+                                </Typography>
+                                <VideoCapsule
+                                    title={this.props.search_result.title}
+                                    thumbnail_url={this.props.search_result.thumbnail_url}
+                                    author_name={this.props.search_result.author_name}
+                                />
+                            </Box>
+                            <Box marginTop='1vh'>
+                                <CategoryExplorer
+                                    categories={this.props.categories}
+                                    saveCategories={this.props.saveCategories}
+                                />
+                            </Box>
                         </Box>
                     </DialogContent>
                     <DialogActions>
@@ -150,6 +154,7 @@ function mapStateToProps(state) {
         search_result: state.search.search_result,
         search_status: state.search.search_status,
         search_error: state.search.search_error,
+        categories: state.collection.categories
     }
 }
 
@@ -157,7 +162,9 @@ function mapDispatchToProps(dispatch) {
     return {
         unSetUser: () => dispatch(unSetUser()),
         searchVideo: payload => dispatch(searchVideo(payload)),
-        setSearchError: payload => dispatch(setSearchError(payload))
+        setSearchError: payload => dispatch(setSearchError(payload)),
+        fetchCategories: payload => dispatch(fetchCategories(payload)),
+        saveCategories: payload => dispatch(saveCategories(payload))
     }
 }
 
