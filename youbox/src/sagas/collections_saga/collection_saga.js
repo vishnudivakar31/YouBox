@@ -17,6 +17,7 @@ function* fetchCategories() {
             categories.push(categoryData)
         }
     })
+    categories = categories.sort((a, b) => a.category < b.category ? -1 : 1)
     yield put({ type: SET_CATEGORIES, payload: {categories} })
 }
 
@@ -31,8 +32,9 @@ function* saveCategories({ payload }) {
             uid
         })
         if(doc) {
-            categories.push(category)
-            yield put({ type: SET_CATEGORIES, payload: {categories} })
+            categories.push({category})
+            categories = categories.sort((a, b) => a.category < b.category ? -1 : 1)
+            yield put({ type: SET_CATEGORIES, payload: {categories: categories} })
         }
     }
 }
