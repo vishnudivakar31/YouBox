@@ -1,12 +1,37 @@
-import { Box, CircularProgress, Typography } from '@material-ui/core'
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, Typography, DialogTitle } from '@material-ui/core'
 import React, { Component } from 'react'
 import CollectionGrid from '../components/collection_grid/CollectionGrid'
+import ReactPlayer from 'react-player/youtube'
 import { connect } from 'react-redux'
 import { fetchVideos } from '../redux/collection_redux/actions'
 
 class MyCollections extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            videoPlayerOpen: false,
+            videoPlayerUrl: '',
+            videoTitle: ''
+        }
+        this.closeVideoPlayer = this.closeVideoPlayer.bind(this) 
+        this.openVideoPlayer = this.openVideoPlayer.bind(this)
+    }
     componentDidMount() {
         this.props.fetchVideos()
+    }
+    openVideoPlayer(url, title) {
+        this.setState({
+            videoPlayerOpen: true,
+            videoPlayerUrl: url,
+            videoTitle: title
+        })
+    }
+    closeVideoPlayer() {
+        this.setState({
+            videoPlayerOpen: false,
+            videoPlayerUrl: '',
+            videoTitle: ''
+        })
     }
     render() {
         const categories = Object.keys(this.props.my_collections)
@@ -30,9 +55,26 @@ class MyCollections extends Component {
                                 {this.props.my_collections[item].length}
                             </Box>
                         </Box>
-                        <CollectionGrid collections={this.props.my_collections[item]} />
+                        <CollectionGrid collections={this.props.my_collections[item]} onPlay={this.openVideoPlayer} />
                     </Box>
                 ))}
+                <Dialog open={this.state.videoPlayerOpen} fullWidth fullScreen>
+                    <DialogTitle>{this.state.videoTitle}</DialogTitle>
+                    <DialogContent>
+                        <ReactPlayer 
+                            url={this.state.videoPlayerUrl} 
+                            controls
+                            playing
+                            width='98vw'
+                            height='86vh'
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.closeVideoPlayer} color='primary'>
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         )
     }
