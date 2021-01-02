@@ -1,8 +1,9 @@
-import { SET_CATEGORIES, ADD_VIDEOS } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING } from './action_types'
 
 const initialState = {
     categories: [],
-    my_collections: {}
+    my_collections: {},
+    collection_loading: false
 }
 
 export default function collectionReducer(state = initialState, action) {
@@ -15,6 +16,10 @@ export default function collectionReducer(state = initialState, action) {
         }
         collection[action.payload.video_details.category].push(action.payload.video_details)
         return Object.assign({}, state, { my_collections: {...collection} })
+    } else if (action.type === SET_VIDEOS) {
+        return Object.assign({}, state, { my_collections: {...action.payload.collections} })
+    } else if (action.type === SET_COLLECTION_LOADING) {
+        return Object.assign({}, state, { collection_loading: action.payload })
     }
     return state
 }

@@ -12,3 +12,26 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.counter_display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3vh 0.5vw;
+  color: white;
+  background: #192A56;
+  margin-left: 0.5vw;
+  border-radius: 10px;
+}
+
+.collection_parent_grid {
+  box-shadow: 0 0 20px #ccc;
+  padding: 1vh 1vw;
+  margin-top: 1vh;
+  border-radius: 10px;
+}
+
+.my_collection {
+  height: 83vh;
+  overflow-y: scroll;
+}

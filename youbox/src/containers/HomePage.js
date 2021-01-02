@@ -4,6 +4,7 @@ import HomeNavigation from '../components/home_nav/HomeNavigation'
 import SearchIcon from '@material-ui/icons/Search';
 import VideoCapsule from '../components/video_capsule/VideoCapsule'
 import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
+import MyCollections from './MyCollections'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
@@ -65,7 +66,7 @@ class HomePage extends Component {
     tabRenderer() {
         if(this.state.nav_tab === 0) {
             return (
-                <div>My Collection</div>
+                <MyCollections />
             )
         } else if(this.state.nav_tab === 1) {
             return (

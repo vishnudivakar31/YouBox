@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO } from './action_types'
-import { SET_CATEGORIES, ADD_VIDEOS } from '../../redux/collection_redux/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING } from '../../redux/collection_redux/action_types'
 import { reduxSagaFirebase as rsf } from '../../firebase/Firebase'
 import capitalize from 'capitalize'
 
@@ -51,8 +51,29 @@ function* saveVideo({ payload }) {
     }
 }
 
+function* fetchVideos() {
+    yield put({ type: SET_COLLECTION_LOADING, payload: true })
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let collections = {}
+    snapshot.forEach(collection => {
+        let video = collection.data()
+        if(video.uid === uid) {
+            const category = video.category
+            if(collections[category] === undefined) {
+                collections[category] = []
+            }
+            video.id = collection.id
+            collections[category].push(video)
+        }
+    })
+    yield put({ type: SET_VIDEOS, payload: { collections: collections } })
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
+}
+
 export default function* collectionSaga() {
     yield takeEvery(FETCH_CATEGORIES, fetchCategories)
     yield takeEvery(SAVE_CATEGORIES, saveCategories)
     yield takeEvery(SAVE_VIDEO, saveVideo)
+    yield takeEvery(FETCH_VIDEO, fetchVideos)
 }
