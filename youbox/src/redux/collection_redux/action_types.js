@@ -1,1 +1,2 @@
 export const SET_CATEGORIES = 'SET_CATEGORIES'
+export const ADD_VIDEOS = 'ADD_VIDEOS'

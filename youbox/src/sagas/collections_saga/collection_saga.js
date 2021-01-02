@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { FETCH_CATEGORIES, SAVE_CATEGORIES } from './action_types'
-import { SET_CATEGORIES } from '../../redux/collection_redux/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS } from '../../redux/collection_redux/action_types'
 import { reduxSagaFirebase as rsf } from '../../firebase/Firebase'
 import capitalize from 'capitalize'
 
@@ -39,7 +39,20 @@ function* saveCategories({ payload }) {
     }
 }
 
+function* saveVideo({ payload }) {
+    const uid = yield select(getUserId)
+    const search_result = payload.search_result
+    const category = payload.category
+    let data = {...search_result, category, uid, created_at: new Date(), favourite: false}
+    if(uid.length > 0 && category.length > 0 && search_result.url.length > 0) {
+        const doc = yield call(rsf.firestore.addDocument, 'collections', data)
+        data.id = doc.id
+        yield put({ type: ADD_VIDEOS, payload: { video_details: data } })
+    }
+}
+
 export default function* collectionSaga() {
     yield takeEvery(FETCH_CATEGORIES, fetchCategories)
     yield takeEvery(SAVE_CATEGORIES, saveCategories)
+    yield takeEvery(SAVE_VIDEO, saveVideo)
 }

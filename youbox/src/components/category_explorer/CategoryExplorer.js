@@ -15,7 +15,7 @@ import {
 
 import './category_explorer.css'
 
-export default function CategoryExplorer({ categories, saveCategories }) {
+export default function CategoryExplorer({ categories, saveCategories, selectCategory }) {
     const categoryTxtRef = React.useRef()
     return(
         <Paper elevation={2} className='category_explorer'>
@@ -43,7 +43,7 @@ export default function CategoryExplorer({ categories, saveCategories }) {
                 <Box className='category_group'>
                     <FormControl component='fieldset'>
                         <FormLabel component='legend'>Category List</FormLabel>
-                        <RadioGroup>
+                        <RadioGroup onChange={selectCategory}>
                             {categories.map((item, index) => (
                                 <FormControlLabel value={item.category} control={<Radio />} label={item.category} key={index} />
                             ))}

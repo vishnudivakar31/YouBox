@@ -7,7 +7,7 @@ import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
-import { fetchCategories, saveCategories } from '../redux/collection_redux/actions'
+import { fetchCategories, saveCategories, saveVideo } from '../redux/collection_redux/actions'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -17,12 +17,14 @@ class HomePage extends Component {
         super(props)
         this.state = {
             nav_tab: 0,
-            dialogOpen: false
+            dialogOpen: false,
+            selected_category: ''
         }
         this.searchVideoText = createRef()
         this.setNavTab = this.setNavTab.bind(this)
         this.tabRenderer = this.tabRenderer.bind(this)
         this.openDialog = this.openDialog.bind(this)
+        this.selectCategory = this.selectCategory.bind(this)
     }
     
     componentDidMount() {
@@ -36,6 +38,17 @@ class HomePage extends Component {
         if(prevProps.user !== this.props.user && this.props.user.userId.length === 0) {
             this.props.history.push('/')
         }
+        if(prevProps.my_collections !== this.props.my_collections) {
+            this.setState({
+                dialogOpen: false
+            })
+        }
+    }
+
+    selectCategory(event) {
+        this.setState({
+            selected_category: event.target.value
+        })
     }
 
     openDialog(status) {
@@ -70,6 +83,13 @@ class HomePage extends Component {
     }
 
     render() {
+        const addButonDisabled = (this.searchVideoText.current === null || 
+            (
+                this.searchVideoText.current &&
+                this.searchVideoText.current.value.length === 0 || 
+                this.state.selected_category.length === 0
+            )
+        )
         return (
             <Box>
                 <HomeHeader 
@@ -132,13 +152,21 @@ class HomePage extends Component {
                                 <CategoryExplorer
                                     categories={this.props.categories}
                                     saveCategories={this.props.saveCategories}
+                                    selectCategory={this.selectCategory}
                                 />
                             </Box>
                         </Box>
                     </DialogContent>
                     <DialogActions>
                         <Button color='secondary' onClick={() => this.openDialog(false)}>Cancel</Button>
-                        <Button color='primary' variant='contained' onClick={() => this.openDialog(false)} disabled>Add</Button>
+                        <Button 
+                            color='primary' 
+                            variant='contained' 
+                            onClick={() => this.props.saveVideo({ search_result: this.props.search_result, category: this.state.selected_category })} 
+                            disabled={addButonDisabled}
+                        >
+                            Add
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </Box>
@@ -154,7 +182,8 @@ function mapStateToProps(state) {
         search_result: state.search.search_result,
         search_status: state.search.search_status,
         search_error: state.search.search_error,
-        categories: state.collection.categories
+        categories: state.collection.categories,
+        my_collections: state.collection.my_collections
     }
 }
 
@@ -164,7 +193,8 @@ function mapDispatchToProps(dispatch) {
         searchVideo: payload => dispatch(searchVideo(payload)),
         setSearchError: payload => dispatch(setSearchError(payload)),
         fetchCategories: payload => dispatch(fetchCategories(payload)),
-        saveCategories: payload => dispatch(saveCategories(payload))
+        saveCategories: payload => dispatch(saveCategories(payload)),
+        saveVideo: payload => dispatch(saveVideo(payload))
     }
 }
 
