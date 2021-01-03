@@ -4,6 +4,7 @@ import CollectionGrid from '../components/collection_grid/CollectionGrid'
 import ReactPlayer from 'react-player/youtube'
 import { connect } from 'react-redux'
 import { fetchVideos } from '../redux/collection_redux/actions'
+import axios from 'axios'
 
 class MyCollections extends Component {
     constructor(props) {
@@ -55,13 +56,12 @@ class MyCollections extends Component {
         const localhost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : ''
         const backendUrl = `${localhost}/convert_audio?url=${url}&title=${title}`
         this.setState({ conversion_status: { id: id, msg: 'converting...'}})
-        fetch(backendUrl)
+        axios.get(backendUrl, {timeout: 600000})
         .then(response => {
-            if(response.ok) {
-                this.downloadAudio(url, title)
-            }
+            this.downloadAudio(url, title)
             this.setState({ conversion_status: { id: '', msg: ''}})
         })
+        .catch(error => console.error(error))
     }
 
     downloadAudio(url, title, id) {
