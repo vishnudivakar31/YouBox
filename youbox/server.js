@@ -85,4 +85,4 @@ app.get('/download_audio', function (req, res) {
     })
 })
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8080, () => console.log('server started: ', new Date()));

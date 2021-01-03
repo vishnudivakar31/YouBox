@@ -1,4 +1,4 @@
-import { Box, IconButton, Paper, Tooltip, Typography } from "@material-ui/core";
+import { Box, IconButton, Paper, Tooltip } from "@material-ui/core";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
