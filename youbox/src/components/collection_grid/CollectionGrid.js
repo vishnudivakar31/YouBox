@@ -5,7 +5,7 @@ import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import './collection_grid.css'
 
-export default function CollectionGrid({ collections, onPlay }) {
+export default function CollectionGrid({ collections, onPlay, downloadVideo }) {
     return (
         <Box className='collection_grid'>
             {collections.map((item, index) => (
@@ -20,7 +20,7 @@ export default function CollectionGrid({ collections, onPlay }) {
                             <IconButton>
                                 <FavoriteBorderIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton onClick={() => downloadVideo(item.url, item.title)}>
                                 <GetAppIcon />
                             </IconButton>
                             <IconButton>

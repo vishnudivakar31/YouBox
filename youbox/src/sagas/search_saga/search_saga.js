@@ -4,7 +4,6 @@ import { SEARCH_VIDEO } from './action_types'
 import {
     SET_LOADING,
     SET_SEARCH_RESULT,
-    UNSET_SEARCH_RESULT,
     SET_SEARCH_ERROR
 } from '../../redux/search_redux/action_types'
 

@@ -1,4 +1,3 @@
-import { REGISTER_USER } from '../../sagas/user_saga/action_type'
 import {
     SET_USER, 
     UNSET_USER,

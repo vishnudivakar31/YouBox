@@ -15,6 +15,7 @@ class MyCollections extends Component {
         }
         this.closeVideoPlayer = this.closeVideoPlayer.bind(this) 
         this.openVideoPlayer = this.openVideoPlayer.bind(this)
+        this.downloadVideo = this.downloadVideo.bind(this) 
     }
     componentDidMount() {
         this.props.fetchVideos()
@@ -32,6 +33,15 @@ class MyCollections extends Component {
             videoPlayerUrl: '',
             videoTitle: ''
         })
+    }
+
+    downloadVideo(url, title) {
+        const backendUrl = `http://localhost:8080/download_video?url=${url}&title=${title}`
+        const link = document.createElement('a')
+        link.href = backendUrl
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }
     render() {
         const categories = Object.keys(this.props.my_collections)
@@ -55,7 +65,11 @@ class MyCollections extends Component {
                                 {this.props.my_collections[item].length}
                             </Box>
                         </Box>
-                        <CollectionGrid collections={this.props.my_collections[item]} onPlay={this.openVideoPlayer} />
+                        <CollectionGrid 
+                            collections={this.props.my_collections[item]} 
+                            onPlay={this.openVideoPlayer} 
+                            downloadVideo={this.downloadVideo}
+                        />
                     </Box>
                 ))}
                 <Dialog open={this.state.videoPlayerOpen} fullWidth fullScreen>
