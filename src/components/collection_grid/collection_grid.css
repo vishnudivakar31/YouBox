@@ -1,0 +1,46 @@
+.collection_grid {
+    display: flex;
+    padding: 1vh 1vw;
+    align-items: center;
+    overflow-x: scroll;
+}
+
+.collection_paper {
+    margin-right: 1vw;
+    width: 15vw !important;
+    height: 30vh;
+    position: relative;
+    cursor: default;
+}
+
+.video_title {
+    font-size: small;
+    padding: 0.5vw;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 90%;
+    text-overflow: ellipsis;
+    font-weight: bolder;
+    color: #2d3436;
+}
+
+img {
+    width: 15vw;
+    height: auto;
+    object-fit: cover;
+}
+
+.video_button_group {
+    position: absolute;
+    bottom: 0.5vh;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin-right: 0.5vw;
+}
+
+.convertion_msg {
+    font-size: x-small;
+    font-weight: bolder;
+    color: #079992;
+}

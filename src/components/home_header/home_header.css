@@ -1,0 +1,30 @@
+.home_header {
+    padding: 1%;
+}
+
+.home_header .brand_name {
+    font-size: 45px;
+    font-family: Bungee;
+    color: #d63031;
+    cursor: default;
+}
+
+.button_group {
+    white-space: nowrap;
+}
+
+.button_group div {
+    margin-left: 1%;
+}
+
+.button_group button {
+    margin-left: 1%;
+}
+
+.welcome_txt {
+    margin-right: 0.5vw;
+    font-family: cursive;
+    font-weight: 600;
+    color: #273c75;
+    cursor: default;
+}
