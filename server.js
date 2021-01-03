@@ -31,7 +31,7 @@ app.get('/download_video', function (req, res) {
     console.log('#TITLE#', title)
     console.log('----------------------------------------------------------')
     res.header("Content-Disposition", `attachment;\  filename=${title}.mp4`);
-    ytdl(url, { format: 'mp4', quality: 'highestvideo' }).pipe(res)
+    ytdl(url, { format: 'mp4', quality: 'highestvideo', filter: 'audioandvideo' }).pipe(res)
 })
 
 app.get('/convert_audio', function(req, res) {
