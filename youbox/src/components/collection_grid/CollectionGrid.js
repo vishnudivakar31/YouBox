@@ -1,11 +1,11 @@
-import { Box, IconButton, Paper, Tooltip } from "@material-ui/core";
+import { Box, IconButton, Paper, Tooltip, Typography } from "@material-ui/core";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import './collection_grid.css'
 
-export default function CollectionGrid({ collections, onPlay, downloadVideo }) {
+export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status }) {
     return (
         <Box className='collection_grid'>
             {collections.map((item, index) => (
@@ -20,12 +20,16 @@ export default function CollectionGrid({ collections, onPlay, downloadVideo }) {
                             <IconButton>
                                 <FavoriteBorderIcon />
                             </IconButton>
-                            <IconButton onClick={() => downloadVideo(item.url, item.title)}>
+                            <IconButton onClick={() => downloadVideo(item.url, item.title, item.id)}>
                                 <GetAppIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton 
+                                onClick={() => downloadAudio(item.url, item.title, item.id)}
+                                disabled={conversion_status.id === item.id}
+                            >
                                 <MusicNoteIcon />
                             </IconButton>
+                            <Box className='convertion_msg' hidden={conversion_status.id !== item.id}>{conversion_status.msg}</Box>
                         </Box>
                     </Paper>
                 </Tooltip>

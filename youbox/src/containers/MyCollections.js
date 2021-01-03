@@ -11,11 +11,17 @@ class MyCollections extends Component {
         this.state = {
             videoPlayerOpen: false,
             videoPlayerUrl: '',
-            videoTitle: ''
+            videoTitle: '',
+            conversion_status: {
+                id: '',
+                msg: ''
+            }
         }
         this.closeVideoPlayer = this.closeVideoPlayer.bind(this) 
         this.openVideoPlayer = this.openVideoPlayer.bind(this)
         this.downloadVideo = this.downloadVideo.bind(this) 
+        this.downloadAudio = this.downloadAudio.bind(this)
+        this.convertAudio = this.convertAudio.bind(this)
     }
     componentDidMount() {
         this.props.fetchVideos()
@@ -36,7 +42,31 @@ class MyCollections extends Component {
     }
 
     downloadVideo(url, title) {
-        const backendUrl = `http://localhost:8080/download_video?url=${url}&title=${title}`
+        const localhost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : ''
+        const backendUrl = `${localhost}/download_video?url=${url}&title=${title}`
+        const link = document.createElement('a')
+        link.href = backendUrl
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
+    convertAudio(url, title, id) {
+        const localhost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : ''
+        const backendUrl = `${localhost}/convert_audio?url=${url}&title=${title}`
+        this.setState({ conversion_status: { id: id, msg: 'converting...'}})
+        fetch(backendUrl)
+        .then(response => {
+            if(response.ok) {
+                this.downloadAudio(url, title)
+            }
+            this.setState({ conversion_status: { id: '', msg: ''}})
+        })
+    }
+
+    downloadAudio(url, title, id) {
+        const localhost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : ''
+        const backendUrl = `${localhost}/download_audio?url=${url}&title=${title}`
         const link = document.createElement('a')
         link.href = backendUrl
         document.body.appendChild(link)
@@ -69,6 +99,8 @@ class MyCollections extends Component {
                             collections={this.props.my_collections[item]} 
                             onPlay={this.openVideoPlayer} 
                             downloadVideo={this.downloadVideo}
+                            downloadAudio={this.convertAudio}
+                            conversion_status={this.state.conversion_status}
                         />
                     </Box>
                 ))}

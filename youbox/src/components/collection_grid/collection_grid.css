@@ -38,3 +38,9 @@ img {
     align-items: center;
     margin-right: 0.5vw;
 }
+
+.convertion_msg {
+    font-size: x-small;
+    font-weight: bolder;
+    color: #079992;
+}
