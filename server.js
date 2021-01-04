@@ -45,7 +45,7 @@ app.get('/convert_audio', function(req, res) {
     let stream = ytdl(url, { quality: 'highestaudio', filter: 'audioonly' })
     ffmpeg(stream)
     .audioBitrate(128)
-    .save(`/tmp/${title}.mp3`)
+    .save(`${title}.mp3`)
     .on('progress', p => {
         readline.cursorTo(process.stdout, 0);
         process.stdout.write(`${p.targetSize}kb downloaded`);
@@ -69,10 +69,10 @@ app.get('/download_audio', function (req, res) {
     res.header("Content-Disposition", `attachment;\  filename=${title}.mp3`);
     console.log('')
     console.log(new Date())
-    var readStream = fs.createReadStream(`/tmp/${title}.mp3`)
+    var readStream = fs.createReadStream(`${title}.mp3`)
     readStream.pipe(res)
     res.on('finish', () => {
-        fs.unlink(`/tmp/${title}.mp3`, (err) => {
+        fs.unlink(`${title}.mp3`, (err) => {
             if(err) {
                 console.error(err)
                 return

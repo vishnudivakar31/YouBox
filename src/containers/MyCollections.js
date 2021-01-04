@@ -58,10 +58,15 @@ class MyCollections extends Component {
         this.setState({ conversion_status: { id: id, msg: 'converting...'}})
         axios.get(backendUrl, {timeout: 600000})
         .then(response => {
-            this.downloadAudio(url, title)
+            if(response.data) {
+                this.downloadAudio(url, title)
+            }
             this.setState({ conversion_status: { id: '', msg: ''}})
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+            console.error(error)
+            this.setState({ conversion_status: { id: '', msg: ''}})
+        })
     }
 
     downloadAudio(url, title, id) {
