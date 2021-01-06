@@ -1,11 +1,12 @@
-import { Box, IconButton, Paper, Tooltip } from "@material-ui/core";
+import { Box, IconButton, Paper, Tooltip, Typography } from "@material-ui/core";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import MusicNoteIcon from '@material-ui/icons/MusicNote'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import './collection_grid.css'
 
-export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status }) {
+export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status, likeVideo, category }) {
     return (
         <Box className='collection_grid'>
             {collections.map((item, index) => (
@@ -17,8 +18,8 @@ export default function CollectionGrid({ collections, onPlay, downloadVideo, dow
                             <IconButton onClick={() => onPlay(item.url, item.title)}>
                                 <PlayArrowIcon />
                             </IconButton>
-                            <IconButton>
-                                <FavoriteBorderIcon />
+                            <IconButton onClick={() => likeVideo({ id: item.id, category, status: !item.favourite})}>
+                                {item.favourite ? <FavoriteIcon style={{ fill: '#d63031' }} /> : <FavoriteBorderIcon />}
                             </IconButton>
                             <IconButton onClick={() => downloadVideo(item.url, item.title, item.id)}>
                                 <GetAppIcon />

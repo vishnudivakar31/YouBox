@@ -1,4 +1,4 @@
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE } from './action_types'
 
 const initialState = {
     categories: [],
@@ -20,6 +20,16 @@ export default function collectionReducer(state = initialState, action) {
         return Object.assign({}, state, { my_collections: {...action.payload.collections} })
     } else if (action.type === SET_COLLECTION_LOADING) {
         return Object.assign({}, state, { collection_loading: action.payload })
+    } else if (action.type === SET_FAVOURITE) {
+        let collection = state.my_collections
+        const category = action.payload.category
+        const id = action.payload.id
+        for(let item of collection[category]) {
+            if(item.id === id) {
+                item.favourite = !item.favourite
+            }
+        }
+        return Object.assign({}, state, { my_collections: {...collection} })
     }
     return state
 }
