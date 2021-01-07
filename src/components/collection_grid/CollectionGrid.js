@@ -7,6 +7,7 @@ export default function CollectionGrid({ collections, onPlay, downloadVideo, dow
         <Box className='collection_grid'>
             {collections.map((item, index) => (
                 <VideoPaper
+                    key={index}
                     index={index}
                     title={item.title}
                     url={item.url}

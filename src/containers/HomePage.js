@@ -7,10 +7,11 @@ import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
 import MyCollections from './MyCollections'
 import Favourites from './Favourites'
 import Recent from './Recent'
+import SearchResult from './SearchResult'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
-import { fetchCategories, saveCategories, saveVideo } from '../redux/collection_redux/actions'
+import { fetchCategories, saveCategories, saveVideo, searchVideos, setSearchResults } from '../redux/collection_redux/actions'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
@@ -62,11 +63,16 @@ class HomePage extends Component {
     }
 
     setNavTab(tabIndex) {
+        this.props.setSearchResults({ searchStatus: false, searchResults: [] })
         this.setState({ nav_tab: tabIndex })
     }
 
     tabRenderer() {
-        if(this.state.nav_tab === 0) {
+        if(this.props.searchStatus) {
+            return (
+                <SearchResult />
+            )
+        } else if(this.state.nav_tab === 0) {
             return (
                 <MyCollections />
             )
@@ -98,6 +104,8 @@ class HomePage extends Component {
                 <HomeNavigation 
                     navigation={this.setNavTab}
                     createHandler={this.openDialog}
+                    showSearchResults={this.props.searchStatus}
+                    searchVideo={this.props.searchVideos}
                 />
                 <Box>
                     {this.tabRenderer()}
@@ -182,7 +190,8 @@ function mapStateToProps(state) {
         search_status: state.search.search_status,
         search_error: state.search.search_error,
         categories: state.collection.categories,
-        my_collections: state.collection.my_collections
+        my_collections: state.collection.my_collections,
+        searchStatus: state.collection.searchStatus
     }
 }
 
@@ -193,7 +202,9 @@ function mapDispatchToProps(dispatch) {
         setSearchError: payload => dispatch(setSearchError(payload)),
         fetchCategories: payload => dispatch(fetchCategories(payload)),
         saveCategories: payload => dispatch(saveCategories(payload)),
-        saveVideo: payload => dispatch(saveVideo(payload))
+        saveVideo: payload => dispatch(saveVideo(payload)),
+        searchVideos: payload => dispatch(searchVideos(payload)),
+        setSearchResults: payload => dispatch(setSearchResults(payload))
     }
 }
 

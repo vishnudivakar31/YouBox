@@ -1,11 +1,13 @@
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES, REMOVE_VIDEO, SET_RECENTS } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES, REMOVE_VIDEO, SET_RECENTS, SET_SEARCH_RESULTS } from './action_types'
 
 const initialState = {
     categories: [],
     my_collections: {},
     collection_loading: false,
     favourites: [],
-    recents: {}
+    recents: {},
+    searchStatus: false,
+    searchResults: []
 }
 
 export default function collectionReducer(state = initialState, action) {
@@ -61,6 +63,8 @@ export default function collectionReducer(state = initialState, action) {
         return Object.assign({}, state, { my_collections: {...collection}, favourites: [...favourites] })
     } else if (action.type === SET_RECENTS) {
         return Object.assign({}, state, { recents: {...action.payload.recents} })
+    } else if (action.type === SET_SEARCH_RESULTS) {
+        return Object.assign({}, state, { searchStatus: action.payload.searchStatus, searchResults: [...action.payload.searchResults] })
     }
     return state
 }
