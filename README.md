@@ -31,9 +31,13 @@ Users can add videos to favourites for quick operations.
 
 Users can view recently added video grouped by months. Here, users can perform limited operations like play, download and convert audio.
 
+### Search Results
+![search-results](https://github.com/vishnudivakar31/YouBox/blob/main/screenshots/search_results.png?raw=true)
+
+Global search with keyword.
+
 ## Under Development
-1. Search
-2. Settings
+1. Settings
 
 ## Known Issues
 1. App is not mobile responsive
