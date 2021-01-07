@@ -27,8 +27,8 @@ Users can add video to the platform by copying the youtube url and follow the st
 Users can add videos to favourites for quick operations.
 
 ## Under Development
-1. Trending
-3. Recent
+1. Recent
+2. Search
 
 ## Known Issues
 1. App is not mobile responsive

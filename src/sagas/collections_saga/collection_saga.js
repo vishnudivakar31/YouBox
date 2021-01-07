@@ -1,8 +1,9 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO, FETCH_FAVOURITES, DELETE_VIDEO } from './action_types'
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES, REMOVE_VIDEO } from '../../redux/collection_redux/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO, FETCH_FAVOURITES, DELETE_VIDEO, FETCH_RECENTS } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES, REMOVE_VIDEO, SET_RECENTS } from '../../redux/collection_redux/action_types'
 import { reduxSagaFirebase as rsf } from '../../firebase/Firebase'
 import capitalize from 'capitalize'
+import moment from 'moment'
 
 const getUserId = (state) => state.user.userId
 const getCategories = state => state.collection.categories
@@ -102,6 +103,26 @@ function* deleteVideo({ payload }) {
     yield put({ type: REMOVE_VIDEO, payload: { category, id }})
 }
 
+function* fetchRecents() {
+    yield put({ type: SET_COLLECTION_LOADING, payload: true })
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let recents = {}
+    snapshot.forEach(collection => {
+        let videoData = collection.data()
+        if(videoData.uid === uid) {
+            videoData.id = collection.id
+            const group = moment(videoData.created_at.seconds * 1000).format('MMMM, YYYY')
+            if(!recents[group]) {
+                recents[group] = []
+            }
+            recents[group].push(videoData)
+        }
+    })
+    yield put({ type: SET_RECENTS, payload: { recents }})
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
+}
+
 export default function* collectionSaga() {
     yield takeEvery(FETCH_CATEGORIES, fetchCategories)
     yield takeEvery(SAVE_CATEGORIES, saveCategories)
@@ -110,4 +131,5 @@ export default function* collectionSaga() {
     yield takeEvery(LIKE_VIDEO, likeVideo)
     yield takeEvery(FETCH_FAVOURITES, fetchFavourites)
     yield takeEvery(DELETE_VIDEO, deleteVideo)
+    yield takeEvery(FETCH_RECENTS, fetchRecents)
 }

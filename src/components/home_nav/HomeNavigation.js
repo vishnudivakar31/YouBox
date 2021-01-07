@@ -1,7 +1,7 @@
-import { Box } from '@material-ui/core'
+import { Box, Button, TextField } from '@material-ui/core'
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import FavoriteIcon from '@material-ui/icons/Favorite'
-import TrendingUpIcon from '@material-ui/icons/TrendingUp'
+import SearchIcon from '@material-ui/icons/Search';
 import UpdateIcon from '@material-ui/icons/Update'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
@@ -22,13 +22,25 @@ function HomeNavigation({ navigation, createHandler }) {
                     <Box marginLeft='0.5vw'>Favourites</Box>
                 </Box>
                 <Box className={selectedTab === 2 ? 'tab_active' : 'tab_inactive'} onClick={() => clickHandler(2)}>
-                    <TrendingUpIcon />
-                    <Box marginLeft='0.5vw'>Trending</Box>
-                </Box>
-                <Box className={selectedTab === 3 ? 'tab_active' : 'tab_inactive'} onClick={() => clickHandler(3)}>
                     <UpdateIcon />
                     <Box marginLeft='0.5vw'>Recent</Box>
                 </Box>
+            </Box>
+            <Box display='flex' alignItems='center' color='white' style={{ background: 'white', padding: '0.5vh 0.5vw', borderRadius: '5px' }}>
+                <TextField 
+                    style={{ marginRight: '0.5vw', width: '20vw' }} 
+                    placeholder='video-name or category'
+                    disabled
+                    fullWidth 
+                />
+                <Button 
+                    variant='outlined' 
+                    color='primary'
+                    startIcon={<SearchIcon />}
+                    disabled
+                >
+                    Search
+                </Button>
             </Box>
             <Box className='add_new_button' onClick={() => createHandler(true)}>
                 <AddCircleOutlineIcon />
