@@ -26,9 +26,14 @@ Users can add video to the platform by copying the youtube url and follow the st
 
 Users can add videos to favourites for quick operations.
 
+### Recent
+![recents](https://github.com/vishnudivakar31/YouBox/blob/main/screenshots/recents.png?raw=true)
+
+Users can view recently added video grouped by months. Here, users can perform limited operations like play, download and convert audio.
+
 ## Under Development
-1. Recent
-2. Search
+1. Search
+2. Settings
 
 ## Known Issues
 1. App is not mobile responsive
