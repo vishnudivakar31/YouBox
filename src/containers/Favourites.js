@@ -88,7 +88,7 @@ class Favourites extends Component {
             )
         }
         return(
-            <Box padding='0.5vh 1vw' className='my_collection'>
+            <Box padding='1vh 1vw' className='my_collection'>
                 <Grid container spacing={1}>
                     {this.props.favourites.map((item, index) => (
                         <Grid item spacing={1} key={index}>
