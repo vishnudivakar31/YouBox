@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import CollectionGrid from '../components/collection_grid/CollectionGrid'
 import ReactPlayer from 'react-player/youtube'
 import { connect } from 'react-redux'
-import { fetchVideos, likeVideo } from '../redux/collection_redux/actions'
+import { fetchVideos, likeVideo, deleteVideo } from '../redux/collection_redux/actions'
 
 class MyCollections extends Component {
     constructor(props) {
@@ -108,6 +108,7 @@ class MyCollections extends Component {
                             downloadAudio={this.convertAudio}
                             likeVideo={this.props.likeVideo}
                             conversion_status={this.state.conversion_status}
+                            deleteVideo={this.props.deleteVideo}
                         />
                     </Box>
                 ))}
@@ -143,7 +144,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchVideos: () => dispatch(fetchVideos()),
-        likeVideo: payload => dispatch(likeVideo(payload))
+        likeVideo: payload => dispatch(likeVideo(payload)),
+        deleteVideo: payload => dispatch(deleteVideo(payload))
     }
 }
 

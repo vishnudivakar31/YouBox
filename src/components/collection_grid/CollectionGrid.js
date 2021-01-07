@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core";
 import VideoPaper from '../video_paper/VideoPaper'
 import './collection_grid.css'
 
-export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status, likeVideo }) {
+export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status, likeVideo, deleteVideo }) {
     return (
         <Box className='collection_grid'>
             {collections.map((item, index) => (
@@ -18,6 +18,7 @@ export default function CollectionGrid({ collections, onPlay, downloadVideo, dow
                     likeVideo={likeVideo}
                     downloadAudio={downloadAudio}
                     downloadVideo={downloadVideo}
+                    deleteVideo={deleteVideo}
                     category={item.category}
                 />
             ))}

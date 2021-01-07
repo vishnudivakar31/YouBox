@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, Di
 import React, { Component } from 'react'
 import ReactPlayer from 'react-player/youtube'
 import { connect } from 'react-redux'
-import { fetchFavourites, likeVideo } from '../redux/collection_redux/actions'
+import { fetchFavourites, likeVideo, deleteVideo } from '../redux/collection_redux/actions'
 import VideoPaper from '../components/video_paper/VideoPaper'
 
 class Favourites extends Component {
@@ -105,6 +105,7 @@ class Favourites extends Component {
                                 downloadAudio={this.convertAudio}
                                 likeVideo={this.props.likeVideo}
                                 category={item.category}
+                                deleteVideo={this.props.deleteVideo}
                                 marginRight='0.5vw'
                             />
                         </Grid>
@@ -142,7 +143,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         fetchFavourites: () => dispatch(fetchFavourites()),
-        likeVideo: payload => dispatch(likeVideo(payload))
+        likeVideo: payload => dispatch(likeVideo(payload)),
+        deleteVideo: payload => dispatch(deleteVideo(payload))
     }
 }
 
