@@ -129,6 +129,8 @@ class Recent extends Component {
                                     category={item.category}
                                     deleteVideo={this.props.deleteVideo}
                                     marginRight='0.5vw'
+                                    hideFav={true}
+                                    hideDelete={true}
                                 />
                             </Grid>
                         ))}
