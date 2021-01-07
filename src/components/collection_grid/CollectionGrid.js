@@ -1,39 +1,25 @@
-import { Box, IconButton, Paper, Tooltip, Typography } from "@material-ui/core";
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import MusicNoteIcon from '@material-ui/icons/MusicNote'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import { Box } from "@material-ui/core";
+import VideoPaper from '../video_paper/VideoPaper'
 import './collection_grid.css'
 
-export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status, likeVideo, category }) {
+export default function CollectionGrid({ collections, onPlay, downloadVideo, downloadAudio, conversion_status, likeVideo }) {
     return (
         <Box className='collection_grid'>
             {collections.map((item, index) => (
-                <Tooltip key={index} title={item.title}>
-                    <Paper elevation={1} key={index} className='collection_paper'>
-                        <img src={item.thumbnail_url} alt='thumpnail' /> 
-                        <Box className='video_title'>{item.title}</Box>
-                        <Box className='video_button_group'>
-                            <IconButton onClick={() => onPlay(item.url, item.title)}>
-                                <PlayArrowIcon />
-                            </IconButton>
-                            <IconButton onClick={() => likeVideo({ id: item.id, category, status: !item.favourite})}>
-                                {item.favourite ? <FavoriteIcon style={{ fill: '#d63031' }} /> : <FavoriteBorderIcon />}
-                            </IconButton>
-                            <IconButton onClick={() => downloadVideo(item.url, item.title, item.id)}>
-                                <GetAppIcon />
-                            </IconButton>
-                            <IconButton 
-                                onClick={() => downloadAudio(item.url, item.title, item.id)}
-                                disabled={conversion_status.id === item.id}
-                            >
-                                <MusicNoteIcon />
-                            </IconButton>
-                            <Box className='convertion_msg' hidden={conversion_status.id !== item.id}>{conversion_status.msg}</Box>
-                        </Box>
-                    </Paper>
-                </Tooltip>
+                <VideoPaper
+                    index={index}
+                    title={item.title}
+                    url={item.url}
+                    thumbnail_url={item.thumbnail_url}
+                    favourite={item.favourite}
+                    id={item.id}
+                    conversion_status={conversion_status}
+                    onPlay={onPlay}
+                    likeVideo={likeVideo}
+                    downloadAudio={downloadAudio}
+                    downloadVideo={downloadVideo}
+                    category={item.category}
+                />
             ))}
         </Box>
     )

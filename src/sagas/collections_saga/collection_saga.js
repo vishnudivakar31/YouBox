@@ -1,6 +1,6 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO } from './action_types'
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE } from '../../redux/collection_redux/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO, FETCH_FAVOURITES } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES } from '../../redux/collection_redux/action_types'
 import { reduxSagaFirebase as rsf } from '../../firebase/Firebase'
 import capitalize from 'capitalize'
 
@@ -75,8 +75,24 @@ function* likeVideo({ payload }) {
     const id = payload.id
     const category = payload.category
     const status = payload.status
-    const doc = yield call(rsf.firestore.updateDocument, `collections/${id}`, 'favourite', status)
+    yield call(rsf.firestore.updateDocument, `collections/${id}`, 'favourite', status)
     yield put({ type: SET_FAVOURITE, payload: {category, id}})
+}
+
+function* fetchFavourites({ payload }) {
+    yield put({ type: SET_COLLECTION_LOADING, payload: true })
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let favourites = []
+    snapshot.forEach(collection => {
+        let video = collection.data()
+        if(video.uid === uid && video.favourite) {
+            video.id = collection.id
+            favourites.push(video)
+        }
+    })
+    yield put({ type: DUMP_FAVOURITES, payload: { favourites: favourites } })
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
 }
 
 export default function* collectionSaga() {
@@ -85,4 +101,5 @@ export default function* collectionSaga() {
     yield takeEvery(SAVE_VIDEO, saveVideo)
     yield takeEvery(FETCH_VIDEO, fetchVideos)
     yield takeEvery(LIKE_VIDEO, likeVideo)
+    yield takeEvery(FETCH_FAVOURITES, fetchFavourites)
 }

@@ -1,4 +1,4 @@
-import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO } from '../../sagas/collections_saga/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO, FETCH_FAVOURITES } from '../../sagas/collections_saga/action_types'
 
 export function fetchCategories(payload) {
     return { type: FETCH_CATEGORIES, payload }
@@ -18,4 +18,8 @@ export function fetchVideos() {
 
 export function likeVideo(payload) {
     return { type: LIKE_VIDEO, payload }
+}
+
+export function fetchFavourites() {
+    return { type: FETCH_FAVOURITES }
 }

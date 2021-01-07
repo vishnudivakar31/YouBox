@@ -1,9 +1,10 @@
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES } from './action_types'
 
 const initialState = {
     categories: [],
     my_collections: {},
-    collection_loading: false
+    collection_loading: false,
+    favourites: []
 }
 
 export default function collectionReducer(state = initialState, action) {
@@ -24,12 +25,21 @@ export default function collectionReducer(state = initialState, action) {
         let collection = state.my_collections
         const category = action.payload.category
         const id = action.payload.id
+        const favourites = state.favourites
         for(let item of collection[category]) {
             if(item.id === id) {
                 item.favourite = !item.favourite
+                if(item.favourite) {
+                    favourites.push(item)
+                } else {
+                    const index = favourites.map(x => x.id).indexOf(item.id)
+                    if(index > -1) favourites.splice(index, 1)
+                }
             }
         }
-        return Object.assign({}, state, { my_collections: {...collection} })
+        return Object.assign({}, state, { my_collections: {...collection}, favourites: [...favourites] })
+    } else if (action.type === DUMP_FAVOURITES) {
+        return Object.assign({}, state, { favourites: [...action.payload.favourites] })
     }
     return state
 }

@@ -5,6 +5,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import VideoCapsule from '../components/video_capsule/VideoCapsule'
 import CategoryExplorer from '../components/category_explorer/CategoryExplorer'
 import MyCollections from './MyCollections'
+import Favourites from './Favourites'
 import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Typography } from '@material-ui/core'
 import { unSetUser } from '../redux/user_reducer/action'
 import { searchVideo, setSearchError } from '../redux/search_redux/action'
@@ -70,7 +71,7 @@ class HomePage extends Component {
             )
         } else if(this.state.nav_tab === 1) {
             return (
-                <div>Favourites</div>
+                <Favourites />
             )
         } else if(this.state.nav_tab === 2) {
             return (
