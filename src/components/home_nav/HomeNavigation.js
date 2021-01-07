@@ -15,8 +15,12 @@ function HomeNavigation({ navigation, createHandler, showSearchResults, searchVi
     const searchRef = useRef(null)
 
     useEffect(() => {
-        setTab(showSearchResults ? 3 : 0)
+        setTab(showSearchResults ? 3 : selectedTab)
     }, [showSearchResults])
+
+    if(!showSearchResults && searchRef.current) {
+        searchRef.current.value = ''
+    }
 
     return (
         <Box className='home_navigation'>
@@ -33,7 +37,7 @@ function HomeNavigation({ navigation, createHandler, showSearchResults, searchVi
                     <UpdateIcon />
                     <Box marginLeft='0.5vw'>Recent</Box>
                 </Box>
-                <Box style={{ display: selectedTab === 3 ? 'flex' : 'none', alignItems: 'center', borderBottom: '1px solid white'}} onClick={() => clickHandler(3)}>
+                <Box style={{ display: selectedTab === 3 ? 'flex' : 'none', alignItems: 'center', borderBottom: '1px solid white', fontSize: 'larger' }} onClick={() => clickHandler(3)}>
                     <FindInPageIcon />
                     <Box marginLeft='0.5vw' style={{ whiteSpace: 'nowrap' }}>Search Results</Box>
                 </Box>
@@ -45,6 +49,12 @@ function HomeNavigation({ navigation, createHandler, showSearchResults, searchVi
                     inputRef={searchRef}
                     error={searchValidity}
                     helperText={searchValidity ? 'enter atleast a part of video name' : ''}
+                    onKeyPress={e => {
+                        if(e.key === 'Enter') {
+                            searchHandler()
+                            e.preventDefault()
+                        }
+                    }}
                     fullWidth 
                 />
                 <Button 
