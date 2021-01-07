@@ -21,9 +21,13 @@ Homepage showcases the user's video collection, favourites, trending videos and 
 
 Users can add video to the platform by copying the youtube url and follow the steps to add it under a particular category. 
 
+### Favourite Videos
+![fav-videos](https://github.com/vishnudivakar31/YouBox/blob/main/screenshots/favourites.png?raw=true)
+
+Users can add videos to favourites for quick operations.
+
 ## Under Development
-1. Favourites
-2. Trending
+1. Trending
 3. Recent
 
 ## Known Issues
