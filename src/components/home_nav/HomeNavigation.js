@@ -1,15 +1,27 @@
-import { Box } from '@material-ui/core'
+import { Box, Button, TextField } from '@material-ui/core'
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import FavoriteIcon from '@material-ui/icons/Favorite'
-import TrendingUpIcon from '@material-ui/icons/TrendingUp'
+import SearchIcon from '@material-ui/icons/Search';
 import UpdateIcon from '@material-ui/icons/Update'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 
 import './home_navigation.css'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-function HomeNavigation({ navigation, createHandler }) {
+function HomeNavigation({ navigation, createHandler, showSearchResults, searchVideo }) {
     const [selectedTab, setTab] = useState(0)
+    const [searchValidity, setSearchValidity] = useState(false)
+    const searchRef = useRef(null)
+
+    useEffect(() => {
+        setTab(showSearchResults ? 3 : selectedTab)
+    }, [showSearchResults])
+
+    if(!showSearchResults && searchRef.current) {
+        searchRef.current.value = ''
+    }
+
     return (
         <Box className='home_navigation'>
             <Box className='home_nav_button_group'>
@@ -22,13 +34,37 @@ function HomeNavigation({ navigation, createHandler }) {
                     <Box marginLeft='0.5vw'>Favourites</Box>
                 </Box>
                 <Box className={selectedTab === 2 ? 'tab_active' : 'tab_inactive'} onClick={() => clickHandler(2)}>
-                    <TrendingUpIcon />
-                    <Box marginLeft='0.5vw'>Trending</Box>
-                </Box>
-                <Box className={selectedTab === 3 ? 'tab_active' : 'tab_inactive'} onClick={() => clickHandler(3)}>
                     <UpdateIcon />
                     <Box marginLeft='0.5vw'>Recent</Box>
                 </Box>
+                <Box style={{ display: selectedTab === 3 ? 'flex' : 'none', alignItems: 'center', borderBottom: '1px solid white', fontSize: 'larger' }} onClick={() => clickHandler(3)}>
+                    <FindInPageIcon />
+                    <Box marginLeft='0.5vw' style={{ whiteSpace: 'nowrap' }}>Search Results</Box>
+                </Box>
+            </Box>
+            <Box display='flex' alignItems='center' color='white' style={{ background: 'white', padding: '0.5vh 0.5vw', borderRadius: '5px' }}>
+                <TextField 
+                    style={{ marginRight: '0.5vw', width: '20vw' }} 
+                    placeholder='video-name'
+                    inputRef={searchRef}
+                    error={searchValidity}
+                    helperText={searchValidity ? 'enter atleast a part of video name' : ''}
+                    onKeyPress={e => {
+                        if(e.key === 'Enter') {
+                            searchHandler()
+                            e.preventDefault()
+                        }
+                    }}
+                    fullWidth 
+                />
+                <Button 
+                    variant='outlined' 
+                    color='primary'
+                    startIcon={<SearchIcon />}
+                    onClick={() => searchHandler()}
+                >
+                    Search
+                </Button>
             </Box>
             <Box className='add_new_button' onClick={() => createHandler(true)}>
                 <AddCircleOutlineIcon />
@@ -40,6 +76,16 @@ function HomeNavigation({ navigation, createHandler }) {
     function clickHandler(tab_index) {
         setTab(tab_index)
         navigation(tab_index)
+    }
+
+    function searchHandler() {
+        const keyword = searchRef.current ? searchRef.current.value : ''
+        if(keyword.length === 0) {
+            setSearchValidity(true)
+        } else {
+            setSearchValidity(false)
+            searchVideo({ keyword })
+        }
     }
 }
 
