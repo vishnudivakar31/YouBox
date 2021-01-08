@@ -1,8 +1,9 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects'
-import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO } from './action_types'
-import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING } from '../../redux/collection_redux/action_types'
+import { FETCH_CATEGORIES, SAVE_CATEGORIES, SAVE_VIDEO, FETCH_VIDEO, LIKE_VIDEO, FETCH_FAVOURITES, DELETE_VIDEO, FETCH_RECENTS, SEARCH_VIDEOS } from './action_types'
+import { SET_CATEGORIES, ADD_VIDEOS, SET_VIDEOS, SET_COLLECTION_LOADING, SET_FAVOURITE, DUMP_FAVOURITES, REMOVE_VIDEO, SET_RECENTS, SET_SEARCH_RESULTS } from '../../redux/collection_redux/action_types'
 import { reduxSagaFirebase as rsf } from '../../firebase/Firebase'
 import capitalize from 'capitalize'
+import moment from 'moment'
 
 const getUserId = (state) => state.user.userId
 const getCategories = state => state.collection.categories
@@ -71,9 +72,81 @@ function* fetchVideos() {
     yield put({ type: SET_COLLECTION_LOADING, payload: false })
 }
 
+function* likeVideo({ payload }) {
+    const id = payload.id
+    const category = payload.category
+    const status = payload.status
+    yield call(rsf.firestore.updateDocument, `collections/${id}`, 'favourite', status)
+    yield put({ type: SET_FAVOURITE, payload: {category, id}})
+}
+
+function* fetchFavourites({ payload }) {
+    yield put({ type: SET_COLLECTION_LOADING, payload: true })
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let favourites = []
+    snapshot.forEach(collection => {
+        let video = collection.data()
+        if(video.uid === uid && video.favourite) {
+            video.id = collection.id
+            favourites.push(video)
+        }
+    })
+    yield put({ type: DUMP_FAVOURITES, payload: { favourites: favourites } })
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
+}
+
+function* deleteVideo({ payload }) {
+    const category = payload.category
+    const id = payload.id
+    yield call(rsf.firestore.deleteDocument, `collections/${id}`)
+    yield put({ type: REMOVE_VIDEO, payload: { category, id }})
+}
+
+function* fetchRecents() {
+    yield put({ type: SET_COLLECTION_LOADING, payload: true })
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let recents = {}
+    snapshot.forEach(collection => {
+        let videoData = collection.data()
+        if(videoData.uid === uid) {
+            videoData.id = collection.id
+            const group = moment(videoData.created_at.seconds * 1000).format('MMMM, YYYY')
+            if(!recents[group]) {
+                recents[group] = []
+            }
+            recents[group].push(videoData)
+        }
+    })
+    yield put({ type: SET_RECENTS, payload: { recents }})
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
+}
+
+function* searchVideos({ payload }) {
+    const keyword = payload.keyword.toLowerCase()
+    const uid = yield select(getUserId)
+    const snapshot = yield call(rsf.firestore.getCollection, 'collections')
+    let searchResults = []
+    snapshot.forEach(collection => {
+        let videoData = collection.data()
+        if(videoData.uid === uid && videoData.title.toLowerCase().search(keyword) !== -1) {
+            videoData.id = collection.id
+            searchResults.push(videoData)
+        }
+    })
+    yield put({ type: SET_SEARCH_RESULTS, payload: { searchStatus: true, searchResults }})
+    yield put({ type: SET_COLLECTION_LOADING, payload: false })
+}
+
 export default function* collectionSaga() {
     yield takeEvery(FETCH_CATEGORIES, fetchCategories)
     yield takeEvery(SAVE_CATEGORIES, saveCategories)
     yield takeEvery(SAVE_VIDEO, saveVideo)
     yield takeEvery(FETCH_VIDEO, fetchVideos)
+    yield takeEvery(LIKE_VIDEO, likeVideo)
+    yield takeEvery(FETCH_FAVOURITES, fetchFavourites)
+    yield takeEvery(DELETE_VIDEO, deleteVideo)
+    yield takeEvery(FETCH_RECENTS, fetchRecents)
+    yield takeEvery(SEARCH_VIDEOS, searchVideos)
 }

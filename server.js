@@ -21,6 +21,10 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+app.get('/home', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.get('/download_video', function (req, res) {
     const url = req.query.url
     const title = req.query.title

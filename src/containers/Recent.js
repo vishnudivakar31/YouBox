@@ -1,16 +1,11 @@
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, Typography, DialogTitle } from '@material-ui/core'
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@material-ui/core'
 import React, { Component } from 'react'
-import CollectionGrid from '../components/collection_grid/CollectionGrid'
 import ReactPlayer from 'react-player/youtube'
 import { connect } from 'react-redux'
-<<<<<<< HEAD:src/containers/MyCollections.js
-import { fetchVideos } from '../redux/collection_redux/actions'
-import axios from 'axios'
-=======
-import { fetchVideos, likeVideo, deleteVideo } from '../redux/collection_redux/actions'
->>>>>>> main:youbox/src/containers/MyCollections.js
+import { fetchRecents, likeVideo, deleteVideo } from '../redux/collection_redux/actions'
+import VideoPaper from '../components/video_paper/VideoPaper'
 
-class MyCollections extends Component {
+class Recent extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -29,7 +24,7 @@ class MyCollections extends Component {
         this.convertAudio = this.convertAudio.bind(this)
     }
     componentDidMount() {
-        this.props.fetchVideos()
+        this.props.fetchRecents()
     }
     openVideoPlayer(url, title) {
         this.setState({
@@ -60,15 +55,11 @@ class MyCollections extends Component {
         const localhost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : ''
         const backendUrl = `${localhost}/convert_audio?url=${url}&title=${title}`
         this.setState({ conversion_status: { id: id, msg: 'converting...'}})
-        axios.get(backendUrl, {timeout: 600000})
+        fetch(backendUrl)
         .then(response => {
-            if(response.data) {
+            if(response.ok) {
                 this.downloadAudio(url, title)
             }
-            this.setState({ conversion_status: { id: '', msg: ''}})
-        })
-        .catch(error => {
-            console.error(error)
             this.setState({ conversion_status: { id: '', msg: ''}})
         })
     }
@@ -83,42 +74,67 @@ class MyCollections extends Component {
         document.body.removeChild(link)
     }
     render() {
-        const categories = Object.keys(this.props.my_collections)
-        categories.sort()
+        const groups = Object.keys(this.props.recents)
         if(this.props.collection_loading) {
             return (
                 <Box display='flex' justifyContent='center' alignItems='center' width='100vw' height='70vh'>
                     <CircularProgress />
                 </Box>
             )
-        } else if (categories.length === 0) {
+        } else if (groups.length === 0) {
             return (
                 <Box display='flex' justifyContent='center' alignItems='center' width='100vw' height='70vh'>
-                    <Typography variant='h5'>No videos in your collection, please add videos</Typography>
+                    <Typography variant='h5'>No recently added vidoes</Typography>
                 </Box>
             )
         }
         return(
-            <Box padding='0.5vh 1vw' className='my_collection'>
-                {categories.map((item, index) => (
-                    <Box key={index} className='collection_parent_grid'>
+            <Box padding='1vh 1vw' className='my_collection'>
+                {groups.map((group, index) => (
+                    <Box key={index}>
                         <Box display='flex' alignItems='center'>
-                            <Typography variant='h6'>{item}</Typography>
+                            <Box style={{ fontSize: '1.5rem', marginBottom: '1vh', fontWeight: 'bold' }}>{group}</Box>
                             <Box 
-                                className='counter_display'
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '0.3vh 0.5vw',
+                                    color: 'white',
+                                    background: '#192A56',
+                                    marginLeft: '0.5vw',
+                                    marginBottom: '0.5vh',
+                                    borderRadius: '10px'
+                                }}
                             >
-                                {this.props.my_collections[item].length}
+                                {this.props.recents[group].length}
                             </Box>
                         </Box>
-                        <CollectionGrid 
-                            collections={this.props.my_collections[item]} 
-                            onPlay={this.openVideoPlayer} 
-                            downloadVideo={this.downloadVideo}
-                            downloadAudio={this.convertAudio}
-                            likeVideo={this.props.likeVideo}
-                            conversion_status={this.state.conversion_status}
-                            deleteVideo={this.props.deleteVideo}
-                        />
+                        
+                        <Grid container spacing={1}>
+                        {this.props.recents[group].map((item, index) => (
+                            <Grid item spacing={1} key={index}>
+                                <VideoPaper
+                                    index={index}
+                                    title={item.title}
+                                    url={item.url}
+                                    thumbnail_url={item.thumbnail_url}
+                                    favourite={item.favourite}
+                                    id={item.id}
+                                    conversion_status={this.state.conversion_status}
+                                    onPlay={this.openVideoPlayer} 
+                                    downloadVideo={this.downloadVideo}
+                                    downloadAudio={this.convertAudio}
+                                    likeVideo={this.props.likeVideo}
+                                    category={item.category}
+                                    deleteVideo={this.props.deleteVideo}
+                                    marginRight='0.5vw'
+                                    hideFav={true}
+                                    hideDelete={true}
+                                />
+                            </Grid>
+                        ))}
+                        </Grid>
                     </Box>
                 ))}
                 <Dialog open={this.state.videoPlayerOpen} fullWidth fullScreen>
@@ -145,17 +161,17 @@ class MyCollections extends Component {
 
 function mapStateToProps(state) {
     return {
-        my_collections: state.collection.my_collections,
+        recents: state.collection.recents,
         collection_loading: state.collection.collection_loading
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchVideos: () => dispatch(fetchVideos()),
+        fetchRecents: () => dispatch(fetchRecents()),
         likeVideo: payload => dispatch(likeVideo(payload)),
         deleteVideo: payload => dispatch(deleteVideo(payload))
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyCollections)
+export default connect(mapStateToProps, mapDispatchToProps)(Recent)
