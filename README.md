@@ -3,7 +3,7 @@
 ## Description
 A cloud solution for you to catelog, download and extract audio from a youtube video. The platform video-player ensures that you are not followed by any ads.
 
-### HOSTED: http://ec2-35-171-26-189.compute-1.amazonaws.com:8080/
+### HOSTED: http://ec2-3-129-243-112.us-east-2.compute.amazonaws.com:8080/home
 
 ### Login Page
 ![login-page](https://github.com/vishnudivakar31/YouBox/blob/main/screenshots/login_screen.png?raw=true)
